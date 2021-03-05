@@ -1,0 +1,4 @@
+const GET_PAGE = "GET_PAGE";
+const SOME_ACTION = "SOME_ACTION";
+
+export { GET_PAGE, SOME_ACTION };
