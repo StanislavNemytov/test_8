@@ -5,7 +5,10 @@ import { Table } from "antd";
 import { React, useEffect, useMemo } from "react";
 import { connect } from "react-redux";
 import { getPage, startLoading, updateTask } from "../../store/requests";
-import { selectorReducerApi } from "../../store/selectors/selector";
+import {
+  selectorReducerApi,
+  selectorReducerAuthorization,
+} from "../../store/selectors/selector";
 import TaskText from "../Task/TaskText";
 
 const columns = [
@@ -52,8 +55,15 @@ const columns = [
  * @param {number} state.reducerAPI.total_task_count
  * @param {[{id:number,username:string,text:string,email:string,status:number}]} state.reducerAPI.tasks
  */
-function Tasks({ reducerAPI, getPage, updateTask, startLoading }) {
+function Tasks({
+  reducerAPI,
+  getPage,
+  updateTask,
+  startLoading,
+  reducerAuthorization,
+}) {
   const { loading, tasks, total_task_count } = reducerAPI;
+  const { expired } = reducerAuthorization;
   useEffect(() => {
     getPage();
   }, []);
@@ -102,7 +112,7 @@ function Tasks({ reducerAPI, getPage, updateTask, startLoading }) {
       ...col,
       onCell: (record) => ({
         record,
-        editable: col.editable,
+        editable: expired ? col.editable : false,
         dataIndex: col.dataIndex,
         title: col.title,
         handleSave,
@@ -131,7 +141,10 @@ function Tasks({ reducerAPI, getPage, updateTask, startLoading }) {
  * @param {number} state.reducerAPI.total_task_count
  * @param {{id:number,username:string,text:string,email:string,status:number}} state.reducerAPI.tasks
  */
-const mapStateToProps = (state) => selectorReducerApi(state);
+const mapStateToProps = (state) => ({
+  ...selectorReducerApi(state),
+  ...selectorReducerAuthorization(state),
+});
 
 const mapDispatchToProps = {
   getPage,
