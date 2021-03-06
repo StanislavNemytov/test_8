@@ -9,6 +9,7 @@ import {
   selectorReducerApi,
   selectorReducerAuthorization,
 } from "../../store/selectors/selector";
+import TableTag from "../TableTag/TableTag";
 import TaskText from "../Task/TaskText";
 
 const columns = [
@@ -42,7 +43,9 @@ const columns = [
     title: "Status",
     dataIndex: "status",
     key: "status",
+    width: "48px",
     sorter: () => {},
+    render: (statusNumber) => <TableTag statusNumber={statusNumber} />,
   },
 ];
 
