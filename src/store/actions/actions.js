@@ -7,6 +7,7 @@ import {
   UPDATE_TASK,
   LOGIN,
   STOP_LOADING,
+  LOGOUT,
 } from "./actionsTypes";
 
 const actions = {
@@ -20,6 +21,7 @@ const actions = {
   endEditing: (task) => ({ type: END_EDITING, task }),
 
   login: (response) => ({ type: LOGIN, response }),
+  logout: () => ({ type: LOGOUT }),
 };
 
 export default actions;

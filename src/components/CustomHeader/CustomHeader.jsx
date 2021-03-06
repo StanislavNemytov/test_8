@@ -2,21 +2,22 @@
 /* eslint-disable no-console */
 import { Button, Form, Input, Modal, PageHeader } from "antd";
 import { Header } from "antd/lib/layout/layout";
-import { React, useCallback, useEffect, useMemo, useState } from "react";
+import Text from "antd/lib/typography/Text";
+import { React, useEffect, useMemo, useState } from "react";
 import { connect } from "react-redux";
-import { login, startLoading } from "../../store/requests";
+import { login, logout, startLoading } from "../../store/requests";
 import { selectorReducerAuthorization } from "../../store/selectors/selector";
 import "./CustomHeader.less";
 
-function CustomHeader({ startLoading, login, reducerAuthorization }) {
-  const { status, expired } = reducerAuthorization;
+function CustomHeader({ startLoading, login, reducerAuthorization, logout }) {
+  const { expired } = reducerAuthorization;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const openLoginModal = () => {
     setIsModalVisible(true);
   };
 
-  const logout = () => {
-    console.log("Logout");
+  const onLogout = () => {
+    logout();
   };
 
   const modalOk = () => {
@@ -35,25 +36,27 @@ function CustomHeader({ startLoading, login, reducerAuthorization }) {
   };
 
   useEffect(() => {
-    if (status === "ok") {
+    if (expired) {
       modalCancel();
     }
-  }, [status]);
-
-  const extraButton = useMemo(() => {
-    if (expired) {
-      return (
-        <Button key="2" type="ghost" onClick={logout}>
-          Logout
-        </Button>
-      );
-    }
-    return (
-      <Button key="1" type="primary" onClick={openLoginModal}>
-        Login
-      </Button>
-    );
   }, [expired]);
+
+  const extraButton = useMemo(
+    () =>
+      expired ? (
+        <>
+          <Text type="secondary">Admin</Text>
+          <Button key="2" type="ghost" onClick={onLogout}>
+            Logout
+          </Button>
+        </>
+      ) : (
+        <Button key="1" type="primary" onClick={openLoginModal}>
+          Login
+        </Button>
+      ),
+    [expired]
+  );
 
   return (
     <Header className="custom-header">
@@ -118,6 +121,7 @@ const mapStateToProps = (state) => selectorReducerAuthorization(state);
 const mapDispatchToProps = {
   login,
   startLoading,
+  logout,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CustomHeader);

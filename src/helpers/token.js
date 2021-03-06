@@ -10,14 +10,6 @@ export const checkValidToken = (tokenDateStart) => {
   );
   const dateNow = new Date();
 
-  console.log(`
-${tokenDateStart}\n
-Task start: ${new Date(tokenDateStart)}\n
-Task end: ${new Date(taskDateEnd)}\n
-${dateNow}\n
-${dateNow.getTime() < taskDateEnd}
-  `);
-
   return dateNow.getTime() < taskDateEnd;
 };
 

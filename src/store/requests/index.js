@@ -43,9 +43,6 @@ export const updateTask = (task) => async (dispatch) => {
   if (response.data.status === "ok") {
     dispatch(actions.updateTask(task));
   }
-  // const tasksOfPage = await httpRequests.getPage();
-  // await dispatch(actions.endEditing());
-  // dispatch(actions.getPage(tasksOfPage));
 };
 
 export const login = (values) => async (dispatch) => {
@@ -54,4 +51,8 @@ export const login = (values) => async (dispatch) => {
   const response = await httpRequests.login(form);
   dispatch(actions.login(response));
   dispatch(actions.stopLoading());
+};
+
+export const logout = () => async (dispatch) => {
+  await dispatch(actions.logout());
 };

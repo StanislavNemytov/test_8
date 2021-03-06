@@ -12,7 +12,6 @@ function verifyToken() {
 
 const initialState = {
   expired: verifyToken(),
-  status: "",
 };
 
 export default function reducerAuthorization(state = initialState, action) {
@@ -22,14 +21,12 @@ export default function reducerAuthorization(state = initialState, action) {
     case LOGIN: {
       const {
         message: { token },
-        status,
       } = response.data;
 
       setToken(token);
 
       return {
         expired: true,
-        status,
       };
     }
 
