@@ -43,24 +43,26 @@ function CustomHeader({ startLoading, login, reducerAuthorization, logout }) {
 
   const extraButton = useMemo(
     () =>
-      expired ? (
-        <>
-          <Text type="secondary">Admin</Text>
-          <Button key="2" type="ghost" onClick={onLogout}>
-            Logout
-          </Button>
-        </>
-      ) : (
-        <Button key="1" type="primary" onClick={openLoginModal}>
-          Login
-        </Button>
-      ),
+      expired
+        ? [
+            <Text key="user" type="secondary">
+              Admin
+            </Text>,
+            <Button key="2" type="ghost" onClick={onLogout}>
+              Logout
+            </Button>,
+          ]
+        : [
+            <Button key="1" type="primary" onClick={openLoginModal}>
+              Login
+            </Button>,
+          ],
     [expired]
   );
 
   return (
     <Header className="custom-header">
-      <PageHeader title="Tasks" extra={[extraButton]} />
+      <PageHeader title="Tasks" extra={extraButton} />
       <Modal
         title="Login"
         visible={isModalVisible}
