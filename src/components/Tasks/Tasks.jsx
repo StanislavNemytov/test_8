@@ -1,0 +1,142 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-console */
+/* eslint-disable no-shadow */
+import { Table } from "antd";
+import { React, useEffect, useMemo } from "react";
+import { connect } from "react-redux";
+import { getPage, startLoading, updateTask } from "../../store/requests";
+import { selectorReducerApi } from "../../store/selectors/selector";
+import TaskText from "../Task/TaskText";
+
+const columns = [
+  {
+    title: "ID",
+    dataIndex: "id",
+    key: "id",
+    sorter: () => {},
+  },
+  {
+    title: "Username",
+    dataIndex: "username",
+    key: "username",
+    sorter: () => {},
+  },
+  {
+    title: "Email",
+    dataIndex: "email",
+    key: "email",
+    sorter: () => {},
+  },
+  {
+    title: "Text",
+    dataIndex: "text",
+    key: "text",
+    width: "30%",
+    editable: true,
+    sorter: () => {},
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    sorter: () => {},
+  },
+];
+
+/**
+ * @param {Object} state
+ * @param {Function} state.getPage
+ * @param {Object} state.reducerAPI
+ * @param {boolean} state.reducerAPI.loading
+ * @param {number} state.reducerAPI.currentPage
+ * @param {number} state.reducerAPI.total_task_count
+ * @param {[{id:number,username:string,text:string,email:string,status:number}]} state.reducerAPI.tasks
+ */
+function Tasks({ reducerAPI, getPage, updateTask, startLoading }) {
+  const { loading, tasks, total_task_count } = reducerAPI;
+  useEffect(() => {
+    getPage();
+  }, []);
+
+  function createDataSource(tasks) {
+    let tableData;
+    if (tasks && tasks.length) {
+      tableData = tasks.map((task) => ({
+        ...task,
+        dataIndex: task.id,
+        key: `${task.id}${task.username}`,
+      }));
+      tableData.length = total_task_count;
+    }
+    return tableData;
+  }
+
+  const tableData = useMemo(() => createDataSource(tasks), [tasks]);
+
+  const handleTableChange = (pagination, filters, sorter) => {
+    console.log(
+      "pagination:",
+      pagination,
+      "\nfilters:",
+      filters,
+      "\nsorter:",
+      sorter
+    );
+  };
+
+  const components = {
+    body: { cell: TaskText },
+  };
+
+  const handleSave = (updatedTask) => {
+    startLoading();
+    updateTask(updatedTask);
+  };
+
+  const newColumns = columns.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+
+    return {
+      ...col,
+      onCell: (record) => ({
+        record,
+        editable: col.editable,
+        dataIndex: col.dataIndex,
+        title: col.title,
+        handleSave,
+      }),
+    };
+  });
+
+  return (
+    <Table
+      loading={loading}
+      columns={newColumns}
+      onChange={handleTableChange}
+      dataSource={tableData}
+      components={components}
+      pagination={{ pageSize: 3, hideOnSinglePage: true }}
+      rowClassName={() => "editable-row"}
+      bordered="true"
+    />
+  );
+}
+
+/**
+ * @param {Object} state
+ * @param {Object} state.reducerAPI
+ * @param {number} state.reducerAPI.currentPage
+ * @param {number} state.reducerAPI.total_task_count
+ * @param {{id:number,username:string,text:string,email:string,status:number}} state.reducerAPI.tasks
+ */
+const mapStateToProps = (state) => selectorReducerApi(state);
+
+const mapDispatchToProps = {
+  getPage,
+  updateTask,
+  startLoading,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Tasks);
