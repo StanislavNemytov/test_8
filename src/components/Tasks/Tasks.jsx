@@ -91,14 +91,6 @@ function Tasks({
       startLoading();
       getPage(current);
     }
-    console.log(
-      "pagination:",
-      pagination,
-      "\nfilters:",
-      filters,
-      "\nsorter:",
-      sorter
-    );
   };
 
   const components = {
