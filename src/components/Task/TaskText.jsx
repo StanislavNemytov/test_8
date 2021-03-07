@@ -4,7 +4,12 @@
 import { Form, Input } from "antd";
 import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import { endEditing, setCurrentEditingTask } from "../../store/requests";
+import { verifyToken } from "../../helpers/token";
+import {
+  checkStatus,
+  endEditing,
+  setCurrentEditingTask,
+} from "../../store/requests";
 import { selectorReducerText } from "../../store/selectors/selector";
 import "./TaskText.less";
 
@@ -18,6 +23,8 @@ const TaskText = ({
   reducerText,
   setCurrentEditingTask,
   endEditing,
+  verifyToken,
+  checkStatus,
   ...restProps
 }) => {
   const [form] = Form.useForm();
@@ -41,15 +48,19 @@ const TaskText = ({
 
   const save = async () => {
     try {
-      const values = await form.validateFields();
-      endEditing();
-      if (values.text.trim() !== text) {
-        const { status } = record;
-        let newStatus = Number(status);
-        if (status < 10) {
-          newStatus += 10;
+      if (verifyToken()) {
+        const values = await form.validateFields();
+        endEditing();
+        if (values.text.trim() !== text) {
+          const { status } = record;
+          let newStatus = Number(status);
+          if (status < 10) {
+            newStatus += 10;
+          }
+          handleSave({ ...record, ...values, status: newStatus });
         }
-        handleSave({ ...record, ...values, status: newStatus });
+      } else {
+        checkStatus();
       }
     } catch (errInfo) {
       console.log("Save failed:", errInfo);
@@ -105,6 +116,11 @@ const TaskText = ({
  */
 const mapStateToProps = (state) => selectorReducerText(state);
 
-const mapDispatchToProps = { setCurrentEditingTask, endEditing };
+const mapDispatchToProps = {
+  setCurrentEditingTask,
+  endEditing,
+  verifyToken,
+  checkStatus,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaskText);

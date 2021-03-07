@@ -10,6 +10,7 @@ const UPDATE_TASK = "UPDATE_TASK";
 
 const LOGIN = "LOGIN";
 const LOGOUT = "LOGOUT";
+const CHECK_STATUS = "CHECK_STATUS";
 
 export {
   GET_PAGE,
@@ -22,4 +23,5 @@ export {
   UPDATE_TASK,
   LOGIN,
   LOGOUT,
+  CHECK_STATUS,
 };

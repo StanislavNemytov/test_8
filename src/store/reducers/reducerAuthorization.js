@@ -1,14 +1,5 @@
-import { getToken, removeToken, setToken } from "../../helpers/token";
-import { LOGIN, LOGOUT } from "../actions/actionsTypes";
-
-function verifyToken() {
-  const { status } = getToken();
-  if (["empty", "outdated"].includes(status)) {
-    return false;
-  }
-
-  return true;
-}
+import { removeToken, setToken, verifyToken } from "../../helpers/token";
+import { LOGIN, LOGOUT, CHECK_STATUS } from "../actions/actionsTypes";
 
 const initialState = {
   expired: verifyToken(),
@@ -32,7 +23,11 @@ export default function reducerAuthorization(state = initialState, action) {
 
     case LOGOUT: {
       removeToken();
-      return { expired: false, status: "" };
+      return { expired: false };
+    }
+
+    case CHECK_STATUS: {
+      return { expired: verifyToken() };
     }
 
     default:

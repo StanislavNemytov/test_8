@@ -40,3 +40,11 @@ export const getToken = () => {
 export const removeToken = () => {
   localStorage.removeItem("token");
 };
+
+export const verifyToken = () => {
+  const { status } = getToken();
+  if (["empty", "outdated"].includes(status)) {
+    return false;
+  }
+  return true;
+};

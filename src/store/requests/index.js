@@ -56,3 +56,7 @@ export const login = (values) => async (dispatch) => {
 export const logout = () => async (dispatch) => {
   await dispatch(actions.logout());
 };
+
+export const checkStatus = () => async (dispatch) => {
+  await dispatch(actions.checkStatus());
+};

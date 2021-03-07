@@ -8,6 +8,7 @@ import {
   LOGIN,
   STOP_LOADING,
   LOGOUT,
+  CHECK_STATUS,
 } from "./actionsTypes";
 
 const actions = {
@@ -22,6 +23,7 @@ const actions = {
 
   login: (response) => ({ type: LOGIN, response }),
   logout: () => ({ type: LOGOUT }),
+  checkStatus: () => ({ type: CHECK_STATUS }),
 };
 
 export default actions;
