@@ -63,7 +63,6 @@ function Tasks({
       title: "Text",
       dataIndex: "text",
       key: "text",
-      // width: "30%",
       editable: true,
       sorter: () => {},
     },

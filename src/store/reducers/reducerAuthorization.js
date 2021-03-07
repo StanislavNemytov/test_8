@@ -1,5 +1,9 @@
 import { getToken, removeToken, setToken } from "../../helpers/token";
-import { LOGIN, LOGOUT } from "../actions/actionsTypes";
+import {
+  LOGIN,
+  LOGOUT,
+  CHANGE_MODAL_VISIBILITY,
+} from "../actions/actionsTypes";
 
 function verifyToken() {
   const { status } = getToken();
@@ -12,6 +16,7 @@ function verifyToken() {
 
 const initialState = {
   expired: verifyToken(),
+  modalIsVisible: false,
 };
 
 export default function reducerAuthorization(state = initialState, action) {
@@ -21,18 +26,35 @@ export default function reducerAuthorization(state = initialState, action) {
     case LOGIN: {
       const {
         message: { token },
+        status,
+        message,
       } = response.data;
 
-      setToken(token);
+      if (status === "ok") {
+        setToken(token);
+
+        return {
+          expired: true,
+          modalIsVisible: !state.modalIsVisible,
+        };
+      }
 
       return {
-        expired: true,
+        ...state,
+        message,
       };
     }
 
     case LOGOUT: {
       removeToken();
       return { expired: false, status: "" };
+    }
+
+    case CHANGE_MODAL_VISIBILITY: {
+      return {
+        ...state,
+        modalIsVisible: !state.modalIsVisible,
+      };
     }
 
     default:

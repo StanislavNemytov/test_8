@@ -4,15 +4,25 @@ import { Header } from "antd/lib/layout/layout";
 import Text from "antd/lib/typography/Text";
 import { React, useEffect, useMemo, useState } from "react";
 import { connect } from "react-redux";
-import { login, logout, startLoading } from "../../store/requests";
+import {
+  changeModalVisibility,
+  login,
+  logout,
+  startLoading,
+} from "../../store/requests";
 import { selectorReducerAuthorization } from "../../store/selectors/selector";
 import "./CustomHeader.less";
 
-function CustomHeader({ startLoading, login, reducerAuthorization, logout }) {
-  const { expired } = reducerAuthorization;
-  const [isModalVisible, setIsModalVisible] = useState(false);
+function CustomHeader({
+  startLoading,
+  login,
+  reducerAuthorization,
+  logout,
+  changeModalVisibility,
+}) {
+  const { expired, message, modalIsVisible } = reducerAuthorization;
   const openLoginModal = () => {
-    setIsModalVisible(true);
+    changeModalVisibility();
   };
 
   const onLogout = () => {
@@ -20,25 +30,20 @@ function CustomHeader({ startLoading, login, reducerAuthorization, logout }) {
   };
 
   const modalOk = () => {
-    setIsModalVisible(false);
-  };
-
-  const modalCancel = () => {
-    setIsModalVisible(false);
+    changeModalVisibility();
   };
 
   const [form] = Form.useForm();
+
+  const modalCancel = () => {
+    form.resetFields();
+    changeModalVisibility();
+  };
 
   const onFinish = (values) => {
     startLoading();
     login(values);
   };
-
-  useEffect(() => {
-    if (expired) {
-      modalCancel();
-    }
-  }, [expired]);
 
   const extraButton = useMemo(
     () =>
@@ -64,7 +69,7 @@ function CustomHeader({ startLoading, login, reducerAuthorization, logout }) {
       <PageHeader title="Tasks" extra={extraButton} />
       <Modal
         title="Login"
-        visible={isModalVisible}
+        visible={modalIsVisible}
         onOk={modalOk}
         onCancel={modalCancel}
       >
@@ -112,6 +117,11 @@ function CustomHeader({ startLoading, login, reducerAuthorization, logout }) {
             )}
           </Form.Item>
         </Form>
+        {message && (
+          <Text type="danger" className="modal-error">
+            {message.password}
+          </Text>
+        )}
       </Modal>
     </Header>
   );
@@ -123,6 +133,7 @@ const mapDispatchToProps = {
   login,
   startLoading,
   logout,
+  changeModalVisibility,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CustomHeader);
