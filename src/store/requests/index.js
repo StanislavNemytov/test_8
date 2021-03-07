@@ -44,6 +44,10 @@ export const updateTask = (task) => async (dispatch) => {
   }
 };
 
+export const changeModalVisibility = () => async (dispatch) => {
+  await dispatch(actions.changeModalVisibility());
+};
+
 export const login = (values) => async (dispatch) => {
   const form = creatFormData(values);
 
