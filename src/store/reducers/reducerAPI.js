@@ -12,6 +12,7 @@ const initialState = {
   tasks: [],
   total_task_count: 0,
   loading: true,
+  currentFilter: "",
 };
 
 /**
