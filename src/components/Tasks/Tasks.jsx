@@ -65,10 +65,18 @@ function Tasks({
   startLoading,
   reducerAuthorization,
 }) {
-  const { loading, tasks, total_task_count, currentPage } = reducerAPI;
+  const {
+    loading,
+    tasks,
+    total_task_count,
+    currentPage,
+    sortDirection,
+    params,
+    sortDirectionDefault,
+  } = reducerAPI;
   const { expired } = reducerAuthorization;
   useEffect(() => {
-    getPage();
+    getPage(params);
   }, []);
 
   function createDataSource(tasks) {
@@ -87,10 +95,31 @@ function Tasks({
 
   const handleTableChange = (pagination, filters, sorter) => {
     const { current } = pagination;
-    if (current !== currentPage) {
-      startLoading();
-      getPage(current);
+    startLoading();
+    if (current && current !== params.page) {
+      getPage({ ...params, page: current });
     }
+
+    if (
+      sorter.field &&
+      (sorter.field !== params.sort_field ||
+        sortDirection[sorter.order] !== params.sort_direction)
+    ) {
+      const sort = {
+        sort_direction: sortDirection[sorter.order] || sortDirectionDefault,
+      };
+      sort.sort_field = sorter.order ? sorter.field : "";
+      getPage({ ...params, ...sort });
+    }
+
+    console.log(
+      "pagination:",
+      pagination,
+      "\nfilters:",
+      filters,
+      "\nsorter:",
+      sorter
+    );
   };
 
   const components = {

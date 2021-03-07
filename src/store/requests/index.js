@@ -10,9 +10,9 @@ function creatFormData(values) {
   return form;
 }
 
-export const getPage = (page) => async (dispatch) => {
-  const response = await httpRequests.getPage(page);
-  dispatch(actions.getPage({ response, page }));
+export const getPage = (params) => async (dispatch) => {
+  const response = await httpRequests.getPage(params);
+  dispatch(actions.getPage({ response, params }));
 };
 
 export const startLoading = () => async (dispatch) => {

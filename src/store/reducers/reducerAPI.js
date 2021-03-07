@@ -8,11 +8,20 @@ import {
 } from "../actions/actionsTypes";
 
 const initialState = {
-  currentPage: 1,
   tasks: [],
   total_task_count: 0,
   loading: true,
   currentFilter: "",
+  sortDirection: {
+    descend: "desc",
+    ascend: "asc",
+  },
+  params: {
+    sort_field: "",
+    sort_direction: "desc",
+    page: 1,
+  },
+  sortDirectionDefault: "desc",
 };
 
 /**
@@ -35,14 +44,18 @@ export default function reducerAPI(state = initialState, action) {
             message: { tasks, total_task_count },
           },
         },
-        page,
+        params: { page, sort_field, sort_direction },
       } = action.response;
       return {
         ...state,
         tasks,
         total_task_count,
         loading: false,
-        currentPage: page || 1,
+        params: {
+          page: page || state.params.page,
+          sort_field: sort_field || state.params.sort_field,
+          sort_direction: sort_direction || state.params.sort_direction,
+        },
       };
     }
 

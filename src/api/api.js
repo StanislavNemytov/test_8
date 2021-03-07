@@ -9,14 +9,10 @@ export const instance = axios.create({
   },
 });
 
-const getParams = {
-  sort_direction: "desc",
-};
-
 export const httpRequests = {
-  getPage: (page = "1") =>
+  getPage: (params) =>
     instance
-      .get("/", { params: { page, ...getParams } })
+      .get("/", { params })
       .then((res) => {
         console.log("Success ========>", res);
         return res;
