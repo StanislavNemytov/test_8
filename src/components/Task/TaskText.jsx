@@ -4,7 +4,12 @@
 import { Form, Input } from "antd";
 import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import { endEditing, setCurrentEditingTask } from "../../store/requests";
+import {
+  checkTokenValidation,
+  endEditing,
+  needAuthorization,
+  setCurrentEditingTask,
+} from "../../store/requests";
 import { selectorReducerText } from "../../store/selectors/selector";
 import "./TaskText.less";
 
@@ -18,6 +23,9 @@ const TaskText = ({
   reducerText,
   setCurrentEditingTask,
   endEditing,
+  needAuthorization,
+  needAuthorizationAction,
+  checkTokenValidation,
   ...restProps
 }) => {
   const [form] = Form.useForm();
@@ -27,17 +35,26 @@ const TaskText = ({
   useEffect(() => {
     if (editing && inputRef.current) {
       inputRef.current.focus();
+      form.setFieldsValue({
+        text: record.text,
+      });
     }
   }, [editing, inputRef.current]);
 
   const startEditing = async () => {
-    if (record.id !== id) {
-      await setCurrentEditingTask(record);
+    checkTokenValidation();
+    if (!needAuthorization) {
+      if (record.id !== id) {
+        await setCurrentEditingTask(record);
+      }
     }
-    form.setFieldsValue({
-      text: record.text,
-    });
   };
+
+  useEffect(() => {
+    if (needAuthorization) {
+      needAuthorizationAction();
+    }
+  }, [needAuthorization]);
 
   const save = async () => {
     try {
@@ -74,7 +91,7 @@ const TaskText = ({
               },
             ]}
           >
-            <Input ref={inputRef} onFocus={startEditing} />
+            <Input ref={inputRef} />
           </Form.Item>
         </Form>
       ) : (
@@ -105,6 +122,11 @@ const TaskText = ({
  */
 const mapStateToProps = (state) => selectorReducerText(state);
 
-const mapDispatchToProps = { setCurrentEditingTask, endEditing };
+const mapDispatchToProps = {
+  setCurrentEditingTask,
+  endEditing,
+  checkTokenValidation,
+  needAuthorizationAction: needAuthorization,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaskText);

@@ -44,6 +44,10 @@ export const updateTask = (task) => async (dispatch) => {
   }
 };
 
+export const changeModalVisibility = () => async (dispatch) => {
+  await dispatch(actions.changeModalVisibility());
+};
+
 export const login = (values) => async (dispatch) => {
   const form = creatFormData(values);
 
@@ -54,4 +58,12 @@ export const login = (values) => async (dispatch) => {
 
 export const logout = () => async (dispatch) => {
   await dispatch(actions.logout());
+};
+
+export const needAuthorization = (error) => async (dispatch) => {
+  await dispatch(actions.needAuthorization(error));
+};
+
+export const checkTokenValidation = () => async (dispatch) => {
+  await dispatch(actions.checkTokenValidation());
 };

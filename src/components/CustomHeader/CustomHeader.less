@@ -7,3 +7,21 @@
 .ant-page-header {
   padding: 20px 0;
 }
+
+.ant-modal {
+  min-width: max-content;
+
+  .modal-error {
+    animation: showing .75s forwards;
+  }
+}
+
+@keyframes showing {
+  from {
+    background-color: rgba(#ff4d4f, .75);
+  }
+
+  to {
+    background-color: transparent;
+  }
+}

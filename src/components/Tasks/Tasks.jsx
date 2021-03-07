@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-shadow */
 import { Table } from "antd";
-import { React, useCallback, useEffect, useMemo } from "react";
+import { React, useEffect, useMemo } from "react";
 import { connect } from "react-redux";
 import { getPage, startLoading, updateTask } from "../../store/requests";
 import {
@@ -63,7 +63,6 @@ function Tasks({
       title: "Text",
       dataIndex: "text",
       key: "text",
-      // width: "30%",
       editable: true,
       sorter: () => {},
     },
@@ -82,7 +81,7 @@ function Tasks({
   }, []);
 
   function createDataSource(tasks) {
-    let tableData;
+    let tableData = [];
     if (tasks && tasks.length) {
       tableData = tasks.map((task) => ({
         ...task,
@@ -109,8 +108,8 @@ function Tasks({
     ) {
       const sort = {
         sort_direction: sortDirection[sorter.order] || sortDirectionDefault,
+        sort_field: sorter.order ? sorter.field : "",
       };
-      sort.sort_field = sorter.order ? sorter.field : "";
       getPage({ ...params, ...sort });
     }
   };

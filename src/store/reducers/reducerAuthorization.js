@@ -1,17 +1,15 @@
-import { getToken, removeToken, setToken } from "../../helpers/token";
-import { LOGIN, LOGOUT } from "../actions/actionsTypes";
-
-function verifyToken() {
-  const { status } = getToken();
-  if (["empty", "outdated"].includes(status)) {
-    return false;
-  }
-
-  return true;
-}
+import { removeToken, setToken, verifyToken } from "../../helpers/token";
+import {
+  CHANGE_MODAL_VISIBILITY,
+  CHECK_TOKEN_VALIDATION,
+  LOGIN,
+  LOGOUT,
+  NEED_AUTHORIZATION,
+} from "../actions/actionsTypes";
 
 const initialState = {
   expired: verifyToken(),
+  modalIsVisible: false,
 };
 
 export default function reducerAuthorization(state = initialState, action) {
@@ -21,18 +19,48 @@ export default function reducerAuthorization(state = initialState, action) {
     case LOGIN: {
       const {
         message: { token },
+        status,
+        message,
       } = response.data;
 
-      setToken(token);
+      if (status === "ok") {
+        setToken(token);
+
+        return {
+          expired: true,
+        };
+      }
 
       return {
-        expired: true,
+        ...state,
+        message,
       };
     }
 
     case LOGOUT: {
       removeToken();
       return { expired: false, status: "" };
+    }
+
+    case CHANGE_MODAL_VISIBILITY: {
+      return {
+        ...state,
+        expired: state.expired,
+        modalIsVisible: !state.modalIsVisible,
+      };
+    }
+
+    case NEED_AUTHORIZATION: {
+      removeToken();
+      return {
+        expired: false,
+        status: "error",
+        message: "Сессия истекла, пожалуйста, зарегистрируйтесь.",
+      };
+    }
+
+    case CHECK_TOKEN_VALIDATION: {
+      return { ...state, needAuthorization: !verifyToken() };
     }
 
     default:
