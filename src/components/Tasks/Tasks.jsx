@@ -87,6 +87,10 @@ function Tasks({
 
   const handleTableChange = (pagination, filters, sorter) => {
     const { current } = pagination;
+    console.log(
+      "🚀 ~ file: Tasks.jsx ~ line 91 ~ handleTableChange ~ current !== currentPage",
+      current !== currentPage
+    );
     if (current !== currentPage) {
       startLoading();
       getPage(current);

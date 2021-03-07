@@ -12,7 +12,7 @@ function creatFormData(values) {
 
 export const getPage = (page) => async (dispatch) => {
   const response = await httpRequests.getPage(page);
-  dispatch(actions.getPage(response));
+  dispatch(actions.getPage({ response, page }));
 };
 
 export const startLoading = () => async (dispatch) => {
