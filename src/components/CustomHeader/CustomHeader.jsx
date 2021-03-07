@@ -1,5 +1,4 @@
 /* eslint-disable no-shadow */
-/* eslint-disable no-console */
 import { Button, Form, Input, Modal, PageHeader } from "antd";
 import { Header } from "antd/lib/layout/layout";
 import Text from "antd/lib/typography/Text";

@@ -6,7 +6,7 @@ const TableTag = ({ statusNumber }) => {
   const variantOfTag = {
     completed: { color: "green", text: "Completed" },
     edited: { color: "red", text: "Edited by Admin" },
-    notCompleted: { color: "blue", text: "Not complete" },
+    notCompleted: { color: "blue", text: "Not completed" },
   };
   const arrOfTags = [];
   arrOfTags.push(statusNumber % 10 ? "completed" : "notCompleted");

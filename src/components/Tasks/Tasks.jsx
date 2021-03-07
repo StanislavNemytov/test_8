@@ -1,53 +1,16 @@
 /* eslint-disable camelcase */
-/* eslint-disable no-console */
 /* eslint-disable no-shadow */
 import { Table } from "antd";
-import { React, useEffect, useMemo } from "react";
+import { React, useCallback, useEffect, useMemo } from "react";
 import { connect } from "react-redux";
 import { getPage, startLoading, updateTask } from "../../store/requests";
 import {
   selectorReducerApi,
   selectorReducerAuthorization,
 } from "../../store/selectors/selector";
+import ChangerStatus from "../ChangerStatus/ChangerStatus";
 import TableTag from "../TableTag/TableTag";
 import TaskText from "../Task/TaskText";
-
-const columns = [
-  {
-    title: "ID",
-    dataIndex: "id",
-    key: "id",
-    sorter: () => {},
-  },
-  {
-    title: "Username",
-    dataIndex: "username",
-    key: "username",
-    sorter: () => {},
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-    key: "email",
-    sorter: () => {},
-  },
-  {
-    title: "Text",
-    dataIndex: "text",
-    key: "text",
-    width: "30%",
-    editable: true,
-    sorter: () => {},
-  },
-  {
-    title: "Status",
-    dataIndex: "status",
-    key: "status",
-    width: "48px",
-    sorter: () => {},
-    render: (statusNumber) => <TableTag statusNumber={statusNumber} />,
-  },
-];
 
 /**
  * @param {Object} state
@@ -74,6 +37,45 @@ function Tasks({
     params,
     sortDirectionDefault,
   } = reducerAPI;
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+      width: "max-content",
+      sorter: () => {},
+    },
+    {
+      title: "Username",
+      dataIndex: "username",
+      key: "username",
+      width: "max-content",
+      sorter: () => {},
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      width: "30%",
+      sorter: () => {},
+    },
+    {
+      title: "Text",
+      dataIndex: "text",
+      key: "text",
+      // width: "30%",
+      editable: true,
+      sorter: () => {},
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      width: "max-content",
+      sorter: () => {},
+      render: (statusNumber) => <TableTag statusNumber={statusNumber} />,
+    },
+  ];
   const { expired } = reducerAuthorization;
   useEffect(() => {
     getPage(params);
@@ -111,15 +113,6 @@ function Tasks({
       sort.sort_field = sorter.order ? sorter.field : "";
       getPage({ ...params, ...sort });
     }
-
-    console.log(
-      "pagination:",
-      pagination,
-      "\nfilters:",
-      filters,
-      "\nsorter:",
-      sorter
-    );
   };
 
   const components = {
@@ -131,22 +124,38 @@ function Tasks({
     updateTask(updatedTask);
   };
 
-  const newColumns = columns.map((col) => {
-    if (!col.editable) {
-      return col;
+  const generateColumnsDataForAntDesign = (expired) => {
+    if (expired) {
+      columns.push({
+        title: "Completed",
+        dataIndex: "status",
+        key: "status-action",
+        width: "max-content",
+        render: (_, task) => <ChangerStatus task={task} />,
+      });
     }
 
-    return {
-      ...col,
-      onCell: (record) => ({
-        record,
-        editable: expired ? col.editable : false,
-        dataIndex: col.dataIndex,
-        title: col.title,
-        handleSave,
-      }),
-    };
-  });
+    return columns.map((col) => {
+      if (!col.editable) {
+        return col;
+      }
+
+      return {
+        ...col,
+        onCell: (record) => ({
+          record,
+          editable: expired ? col.editable : false,
+          dataIndex: col.dataIndex,
+          title: col.title,
+          handleSave,
+        }),
+      };
+    });
+  };
+
+  const newColumns = useMemo(() => generateColumnsDataForAntDesign(expired), [
+    expired,
+  ]);
 
   return (
     <Table
@@ -167,13 +176,6 @@ function Tasks({
   );
 }
 
-/**
- * @param {Object} state
- * @param {Object} state.reducerAPI
- * @param {number} state.reducerAPI.currentPage
- * @param {number} state.reducerAPI.total_task_count
- * @param {{id:number,username:string,text:string,email:string,status:number}} state.reducerAPI.tasks
- */
 const mapStateToProps = (state) => ({
   ...selectorReducerApi(state),
   ...selectorReducerAuthorization(state),

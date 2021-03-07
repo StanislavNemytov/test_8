@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { httpRequests } from "../../api/api";
 import actions from "../actions/actions";
 
