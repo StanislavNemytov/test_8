@@ -37,7 +37,6 @@ function NewTask({ sendNewTask, startLoading, getPage, reducerAPI }) {
   const [form] = useForm();
 
   const onFinish = async (values) => {
-    console.log("Success:", values);
     startLoading();
     await sendNewTask(values);
     form.resetFields();
