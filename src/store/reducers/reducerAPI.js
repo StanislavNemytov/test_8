@@ -27,10 +27,6 @@ const initialState = {
  * @returns {initialState}
  */
 export default function reducerAPI(state = initialState, action) {
-  console.log(
-    "🚀 ~ file: reducerAPI.js ~ line 30 ~ reducerAPI ~ action",
-    action
-  );
   switch (action.type) {
     case GET_PAGE: {
       const {
@@ -46,7 +42,7 @@ export default function reducerAPI(state = initialState, action) {
         tasks,
         total_task_count,
         loading: false,
-        currentPage: page,
+        currentPage: page || 1,
       };
     }
 
