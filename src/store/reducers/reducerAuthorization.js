@@ -1,18 +1,11 @@
-import { getToken, removeToken, setToken } from "../../helpers/token";
+import { removeToken, setToken, verifyToken } from "../../helpers/token";
 import {
+  CHANGE_MODAL_VISIBILITY,
+  CHECK_TOKEN_VALIDATION,
   LOGIN,
   LOGOUT,
-  CHANGE_MODAL_VISIBILITY,
+  NEED_AUTHORIZATION,
 } from "../actions/actionsTypes";
-
-function verifyToken() {
-  const { status } = getToken();
-  if (["empty", "outdated"].includes(status)) {
-    return false;
-  }
-
-  return true;
-}
 
 const initialState = {
   expired: verifyToken(),
@@ -35,7 +28,6 @@ export default function reducerAuthorization(state = initialState, action) {
 
         return {
           expired: true,
-          modalIsVisible: !state.modalIsVisible,
         };
       }
 
@@ -52,9 +44,23 @@ export default function reducerAuthorization(state = initialState, action) {
 
     case CHANGE_MODAL_VISIBILITY: {
       return {
+        ...state,
         expired: state.expired,
         modalIsVisible: !state.modalIsVisible,
       };
+    }
+
+    case NEED_AUTHORIZATION: {
+      removeToken();
+      return {
+        expired: false,
+        status: "error",
+        message: "Сессия истекла, пожалуйста, зарегистрируйтесь.",
+      };
+    }
+
+    case CHECK_TOKEN_VALIDATION: {
+      return { ...state, needAuthorization: !verifyToken() };
     }
 
     default:

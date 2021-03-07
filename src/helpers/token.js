@@ -37,6 +37,15 @@ export const getToken = () => {
   return result;
 };
 
+export function verifyToken() {
+  const { status } = getToken();
+  if (["empty", "outdated"].includes(status)) {
+    return false;
+  }
+
+  return true;
+}
+
 export const removeToken = () => {
   localStorage.removeItem("token");
 };

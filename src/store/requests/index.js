@@ -59,3 +59,11 @@ export const login = (values) => async (dispatch) => {
 export const logout = () => async (dispatch) => {
   await dispatch(actions.logout());
 };
+
+export const needAuthorization = (error) => async (dispatch) => {
+  await dispatch(actions.needAuthorization(error));
+};
+
+export const checkTokenValidation = () => async (dispatch) => {
+  await dispatch(actions.checkTokenValidation());
+};

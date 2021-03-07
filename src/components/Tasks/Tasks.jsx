@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-shadow */
 import { Table } from "antd";
-import { React, useCallback, useEffect, useMemo } from "react";
+import { React, useEffect, useMemo } from "react";
 import { connect } from "react-redux";
 import { getPage, startLoading, updateTask } from "../../store/requests";
 import {

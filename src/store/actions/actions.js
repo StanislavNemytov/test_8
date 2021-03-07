@@ -9,6 +9,8 @@ import {
   STOP_LOADING,
   LOGOUT,
   CHANGE_MODAL_VISIBILITY,
+  NEED_AUTHORIZATION,
+  CHECK_TOKEN_VALIDATION,
 } from "./actionsTypes";
 
 const actions = {
@@ -24,6 +26,8 @@ const actions = {
   changeModalVisibility: () => ({ type: CHANGE_MODAL_VISIBILITY }),
   login: (response) => ({ type: LOGIN, response }),
   logout: () => ({ type: LOGOUT }),
+  needAuthorization: () => ({ type: NEED_AUTHORIZATION }),
+  checkTokenValidation: () => ({ type: CHECK_TOKEN_VALIDATION }),
 };
 
 export default actions;

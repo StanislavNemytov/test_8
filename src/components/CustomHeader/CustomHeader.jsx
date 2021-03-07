@@ -2,7 +2,7 @@
 import { Button, Form, Input, Modal, PageHeader } from "antd";
 import { Header } from "antd/lib/layout/layout";
 import Text from "antd/lib/typography/Text";
-import { React, useMemo } from "react";
+import { React, useEffect, useMemo } from "react";
 import { connect } from "react-redux";
 import {
   changeModalVisibility,
@@ -20,17 +20,18 @@ function CustomHeader({
   logout,
   changeModalVisibility,
 }) {
-  const { expired, message, modalIsVisible } = reducerAuthorization;
+  const {
+    expired,
+    message,
+    modalIsVisible,
+    needAuthorization,
+  } = reducerAuthorization;
   const openLoginModal = () => {
     changeModalVisibility();
   };
 
   const onLogout = () => {
     logout();
-  };
-
-  const modalOk = () => {
-    changeModalVisibility();
   };
 
   const [form] = Form.useForm();
@@ -44,6 +45,18 @@ function CustomHeader({
     startLoading();
     login(values);
   };
+
+  useEffect(() => {
+    if (needAuthorization) {
+      openLoginModal();
+    }
+  }, [needAuthorization]);
+
+  useEffect(() => {
+    if (expired && modalIsVisible) {
+      form.resetFields();
+    }
+  }, [expired]);
 
   const extraButton = useMemo(
     () =>
@@ -64,14 +77,25 @@ function CustomHeader({
     [expired]
   );
 
+  const showError = useMemo(() => {
+    if (message) {
+      return (
+        <Text type="danger" className="modal-error">
+          {message.password || message}
+        </Text>
+      );
+    }
+    return null;
+  }, [message]);
+
   return (
     <Header className="custom-header">
       <PageHeader title="Tasks" extra={extraButton} />
       <Modal
         title="Login"
         visible={modalIsVisible}
-        onOk={modalOk}
         onCancel={modalCancel}
+        okButtonProps={{ hidden: true }}
       >
         <Form
           form={form}
@@ -117,11 +141,7 @@ function CustomHeader({
             )}
           </Form.Item>
         </Form>
-        {message && (
-          <Text type="danger" className="modal-error">
-            {message.password}
-          </Text>
-        )}
+        {showError}
       </Modal>
     </Header>
   );
