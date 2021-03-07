@@ -65,10 +65,18 @@ function Tasks({
   startLoading,
   reducerAuthorization,
 }) {
-  const { loading, tasks, total_task_count } = reducerAPI;
+  const {
+    loading,
+    tasks,
+    total_task_count,
+    currentPage,
+    sortDirection,
+    params,
+    sortDirectionDefault,
+  } = reducerAPI;
   const { expired } = reducerAuthorization;
   useEffect(() => {
-    getPage();
+    getPage(params);
   }, []);
 
   function createDataSource(tasks) {
@@ -79,7 +87,6 @@ function Tasks({
         dataIndex: task.id,
         key: `${task.id}${task.username}`,
       }));
-      tableData.length = total_task_count;
     }
     return tableData;
   }
@@ -87,6 +94,24 @@ function Tasks({
   const tableData = useMemo(() => createDataSource(tasks), [tasks]);
 
   const handleTableChange = (pagination, filters, sorter) => {
+    const { current } = pagination;
+    startLoading();
+    if (current && current !== params.page) {
+      getPage({ ...params, page: current });
+    }
+
+    if (
+      sorter.field &&
+      (sorter.field !== params.sort_field ||
+        sortDirection[sorter.order] !== params.sort_direction)
+    ) {
+      const sort = {
+        sort_direction: sortDirection[sorter.order] || sortDirectionDefault,
+      };
+      sort.sort_field = sorter.order ? sorter.field : "";
+      getPage({ ...params, ...sort });
+    }
+
     console.log(
       "pagination:",
       pagination,
@@ -130,7 +155,12 @@ function Tasks({
       onChange={handleTableChange}
       dataSource={tableData}
       components={components}
-      pagination={{ pageSize: 3, hideOnSinglePage: true }}
+      pagination={{
+        pageSize: 3,
+        hideOnSinglePage: true,
+        defaultCurrent: currentPage,
+        total: total_task_count,
+      }}
       rowClassName={() => "editable-row"}
       bordered="true"
     />

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-console */
 /* eslint-disable no-shadow */
 import { Button, Form, Input } from "antd";
@@ -31,7 +32,8 @@ const tailLayout = {
  * @param {number} state.reducerAPI.total_task_count
  * @param {{id:number,username:string,text:string,email:string,status:number}} state.reducerAPI.tasks
  */
-function NewTask({ sendNewTask, startLoading, getPage }) {
+function NewTask({ sendNewTask, startLoading, getPage, reducerAPI }) {
+  const { params } = reducerAPI;
   const [form] = useForm();
 
   const onFinish = async (values) => {
@@ -39,7 +41,7 @@ function NewTask({ sendNewTask, startLoading, getPage }) {
     startLoading();
     await sendNewTask(values);
     form.resetFields();
-    getPage();
+    getPage(params);
   };
 
   const onFinishFailed = (errorInfo) => {
