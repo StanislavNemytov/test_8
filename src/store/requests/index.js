@@ -42,28 +42,29 @@ export const updateTask = (task) => async (dispatch) => {
   if (response.data.status === "ok") {
     dispatch(actions.updateTask(task));
   }
+  dispatch(actions.stopLoading());
 };
 
 export const changeModalVisibility = () => async (dispatch) => {
-  await dispatch(actions.changeModalVisibility());
+  dispatch(actions.changeModalVisibility());
 };
 
 export const login = (values) => async (dispatch) => {
   const form = creatFormData(values);
 
   const response = await httpRequests.login(form);
-  dispatch(actions.login(response));
+  await dispatch(actions.login(response));
   dispatch(actions.stopLoading());
 };
 
 export const logout = () => async (dispatch) => {
-  await dispatch(actions.logout());
+  dispatch(actions.logout());
 };
 
-export const needAuthorization = (error) => async (dispatch) => {
-  await dispatch(actions.needAuthorization(error));
+export const needAuthorization = () => async (dispatch) => {
+  await dispatch(actions.needAuthorization());
 };
 
 export const checkTokenValidation = () => async (dispatch) => {
-  await dispatch(actions.checkTokenValidation());
+  dispatch(actions.checkTokenValidation());
 };

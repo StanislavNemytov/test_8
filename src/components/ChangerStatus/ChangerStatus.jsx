@@ -23,15 +23,11 @@ function ChangerStatus({
 }) {
   const changeStatus = () => {
     checkTokenValidation();
-    if (!needAuthorization) {
-      const newStatus = String(task.status).split("");
-      newStatus[newStatus.length - 1] = +newStatus[newStatus.length - 1]
-        ? 0
-        : 1;
-      const newTask = { ...task, status: Number(newStatus.join("")) };
-      startLoading();
-      updateTask(newTask);
-    }
+    const newStatus = String(task.status).split("");
+    newStatus[newStatus.length - 1] = +newStatus[newStatus.length - 1] ? 0 : 1;
+    const newTask = { ...task, status: Number(newStatus.join("")) };
+    startLoading();
+    updateTask(newTask);
   };
 
   useEffect(() => {

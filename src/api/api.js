@@ -3,7 +3,6 @@ const axios = require("axios").default;
 
 export const instance = axios.create({
   baseURL: "https://uxcandy.com/~shapoval/test-task-backend/v2",
-  timeout: 1e3,
   params: {
     developer: "StanislavNemytov",
   },
