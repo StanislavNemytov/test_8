@@ -81,10 +81,16 @@ const TaskText = ({
   if (editable) {
     childNode =
       editing && record.id === id ? (
-        <Form form={form} onFinish={save}>
+        <Form
+          form={form}
+          onFinish={save}
+          style={{
+            minWidth: 220,
+          }}
+        >
           <Form.Item
             style={{
-              margin: 4,
+              marginBottom: 8,
             }}
             name={dataIndex}
             rules={[
@@ -94,7 +100,7 @@ const TaskText = ({
               },
             ]}
           >
-            <TextArea ref={inputRef} autoSize={{ minRows: 1, maxRows: 4 }} />
+            <TextArea ref={inputRef} autoSize={{ minRows: 1, maxRows: 6 }} />
           </Form.Item>
           <Form.Item
             style={{
@@ -119,6 +125,7 @@ const TaskText = ({
           className="editable-cell-value-wrap"
           style={{
             paddingRight: 24,
+            minWidth: 220,
           }}
           onClick={startEditing}
           onKeyPress={startEditing}

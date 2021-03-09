@@ -54,6 +54,7 @@ function Tasks({
       dataIndex: "text",
       key: "text",
       editable: true,
+      width: 220,
       sorter: () => {},
     },
     {
@@ -172,7 +173,7 @@ function Tasks({
       }}
       rowClassName={() => "editable-row"}
       bordered="true"
-      scroll={{ x: 950 }}
+      scroll={{ x: 850 }}
     />
   );
 }

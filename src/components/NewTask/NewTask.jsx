@@ -17,12 +17,6 @@ const layout = {
     span: 16,
   },
 };
-const tailLayout = {
-  wrapperCol: {
-    offset: 4,
-    span: 16,
-  },
-};
 
 function NewTask({ sendNewTask, startLoading, getPage, reducerAPI }) {
   const { params } = reducerAPI;
@@ -110,8 +104,12 @@ function NewTask({ sendNewTask, startLoading, getPage, reducerAPI }) {
           <TextArea autoSize={{ minRows: 3, maxRows: 5 }} />
         </Form.Item>
 
-        <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit">
+        <Form.Item wrapperCol={{ sm: { offset: 4, span: 16 } }}>
+          <Button
+            style={{ marginLeft: "auto", display: "block" }}
+            type="primary"
+            htmlType="submit"
+          >
             Submit
           </Button>
         </Form.Item>
