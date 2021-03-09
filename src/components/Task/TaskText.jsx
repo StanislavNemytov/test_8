@@ -1,7 +1,8 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-console */
 /* eslint-disable no-shadow */
-import { Form, Input } from "antd";
+import { Button, Form } from "antd";
+import TextArea from "antd/lib/input/TextArea";
 import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import {
@@ -73,6 +74,10 @@ const TaskText = ({
     }
   };
 
+  const cancelEditing = () => {
+    endEditing();
+  };
+
   let childNode = children;
 
   if (editable) {
@@ -81,7 +86,7 @@ const TaskText = ({
         <Form form={form} onFinish={save}>
           <Form.Item
             style={{
-              margin: 0,
+              margin: 4,
             }}
             name={dataIndex}
             rules={[
@@ -91,7 +96,25 @@ const TaskText = ({
               },
             ]}
           >
-            <Input ref={inputRef} />
+            <TextArea ref={inputRef} autoSize={{ minRows: 2, maxRows: 4 }} />
+          </Form.Item>
+          <Form.Item
+            style={{
+              margin: 0,
+            }}
+          >
+            <Button
+              size="small"
+              type="ghost"
+              color="green"
+              style={{ marginRight: 8 }}
+              onClick={cancelEditing}
+            >
+              Cancel
+            </Button>
+            <Button size="small" type="primary" htmlType="submit">
+              Save
+            </Button>
           </Form.Item>
         </Form>
       ) : (

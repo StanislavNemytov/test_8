@@ -3,6 +3,7 @@
 /* eslint-disable no-shadow */
 import { Button, Col, Form, Input, notification, Row } from "antd";
 import { useForm } from "antd/lib/form/Form";
+import TextArea from "antd/lib/input/TextArea";
 import Text from "antd/lib/typography/Text";
 import Title from "antd/lib/typography/Title";
 import { React } from "react";
@@ -117,7 +118,7 @@ function NewTask({ sendNewTask, startLoading, getPage, reducerAPI }) {
             },
           ]}
         >
-          <Input />
+          <TextArea autoSize={{ minRows: 3, maxRows: 5 }} />
         </Form.Item>
 
         <Form.Item {...tailLayout}>
