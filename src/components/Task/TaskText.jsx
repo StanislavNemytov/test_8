@@ -41,11 +41,11 @@ const TaskText = ({
     }
   }, [editing, inputRef.current]);
 
-  const startEditing = async () => {
+  const startEditing = () => {
     checkTokenValidation();
     if (!needAuthorization) {
       if (record.id !== id) {
-        await setCurrentEditingTask(record);
+        setCurrentEditingTask(record);
       }
     }
   };

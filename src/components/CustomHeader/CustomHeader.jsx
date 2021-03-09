@@ -2,12 +2,13 @@
 import { Button, Form, Input, Modal, PageHeader } from "antd";
 import { Header } from "antd/lib/layout/layout";
 import Text from "antd/lib/typography/Text";
-import { React, useEffect, useMemo } from "react";
+import { React, useEffect, useMemo, useRef } from "react";
 import { connect } from "react-redux";
 import {
   changeModalVisibility,
   login,
   logout,
+  needAuthorization,
   startLoading,
 } from "../../store/requests";
 import { selectorReducerAuthorization } from "../../store/selectors/selector";
@@ -19,6 +20,7 @@ function CustomHeader({
   reducerAuthorization,
   logout,
   changeModalVisibility,
+  needAuthorizationAction,
 }) {
   const {
     expired,
@@ -26,6 +28,10 @@ function CustomHeader({
     modalIsVisible,
     needAuthorization,
   } = reducerAuthorization;
+  const formRef = useRef(null);
+
+  const [form] = Form.useForm();
+
   const openLoginModal = () => {
     changeModalVisibility();
   };
@@ -34,10 +40,7 @@ function CustomHeader({
     logout();
   };
 
-  const [form] = Form.useForm();
-
   const modalCancel = () => {
-    form.resetFields();
     changeModalVisibility();
   };
 
@@ -47,7 +50,14 @@ function CustomHeader({
   };
 
   useEffect(() => {
+    if (modalIsVisible) {
+      formRef.current.focus();
+    }
+  }, [modalIsVisible]);
+
+  useEffect(() => {
     if (needAuthorization) {
+      needAuthorizationAction();
       openLoginModal();
     }
   }, [needAuthorization]);
@@ -55,6 +65,7 @@ function CustomHeader({
   useEffect(() => {
     if (expired && modalIsVisible) {
       form.resetFields();
+      modalCancel();
     }
   }, [expired]);
 
@@ -112,7 +123,7 @@ function CustomHeader({
               },
             ]}
           >
-            <Input placeholder="Username" />
+            <Input ref={formRef} placeholder="Username" />
           </Form.Item>
           <Form.Item
             name="password"
@@ -132,7 +143,7 @@ function CustomHeader({
                 htmlType="submit"
                 disabled={
                   !form.isFieldsTouched(true) ||
-                  !!form.getFieldsError().filter(({ errors }) => errors.length)
+                  form.getFieldsError().filter(({ errors }) => errors.length)
                     .length
                 }
               >
@@ -154,6 +165,7 @@ const mapDispatchToProps = {
   startLoading,
   logout,
   changeModalVisibility,
+  needAuthorizationAction: needAuthorization,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CustomHeader);

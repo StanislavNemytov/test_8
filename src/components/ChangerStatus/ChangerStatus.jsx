@@ -1,10 +1,9 @@
 /* eslint-disable no-shadow */
 import { Button } from "antd";
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { connect } from "react-redux";
 import {
   checkTokenValidation,
-  needAuthorization,
   startLoading,
   updateTask,
 } from "../../store/requests";
@@ -18,23 +17,21 @@ function ChangerStatus({
   startLoading,
   updateTask,
   checkTokenValidation,
-  needAuthorization,
-  needAuthorizationAction,
+  reducerAuthorization,
 }) {
+  const { needAuthorization } = reducerAuthorization;
   const changeStatus = () => {
     checkTokenValidation();
-    const newStatus = String(task.status).split("");
-    newStatus[newStatus.length - 1] = +newStatus[newStatus.length - 1] ? 0 : 1;
-    const newTask = { ...task, status: Number(newStatus.join("")) };
-    startLoading();
-    updateTask(newTask);
-  };
-
-  useEffect(() => {
-    if (needAuthorization) {
-      needAuthorizationAction();
+    if (!needAuthorization) {
+      const newStatus = String(task.status).split("");
+      newStatus[newStatus.length - 1] = +newStatus[newStatus.length - 1]
+        ? 0
+        : 1;
+      const newTask = { ...task, status: Number(newStatus.join("")) };
+      startLoading();
+      updateTask(newTask);
     }
-  }, [needAuthorization]);
+  };
 
   const text = useMemo(() => (
     <>{task.status % 10 ? "Incomplete" : "Complete"}</>
@@ -56,7 +53,6 @@ const mapDispatchToProps = {
   updateTask,
   startLoading,
   checkTokenValidation,
-  needAuthorizationAction: needAuthorization,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChangerStatus);

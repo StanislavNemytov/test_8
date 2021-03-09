@@ -12,12 +12,8 @@ export const httpRequests = {
   getPage: (params) =>
     instance
       .get("/", { params })
-      .then((res) => {
-        console.log("Success ========>", res);
-        return res;
-      })
+      .then((res) => res)
       .catch((error) => {
-        console.log("Error ========>", error);
         throw new Error(error.message);
       }),
 
@@ -27,12 +23,8 @@ export const httpRequests = {
   sendNewTask: (form) =>
     instance
       .post("/create", form)
-      .then((res) => {
-        console.log("Success ========>", res);
-        return res;
-      })
+      .then((res) => res)
       .catch((error) => {
-        console.log("Error ========>", error);
         throw new Error(error.message);
       }),
 
@@ -45,12 +37,8 @@ export const httpRequests = {
 
     return instance
       .post(`/edit/${task.id}`, form)
-      .then((res) => {
-        console.log("Success ========>", res);
-        return res;
-      })
+      .then((res) => res)
       .catch((error) => {
-        console.log("Error ========>", error);
         throw new Error(error.message);
       });
   },
@@ -58,12 +46,8 @@ export const httpRequests = {
   login: (form) =>
     instance
       .post("/login", form)
-      .then((res) => {
-        console.log("Success ========>", res);
-        return res;
-      })
+      .then((res) => res)
       .catch((error) => {
-        console.log("Error ========>", error);
         throw new Error(error.message);
       }),
 };

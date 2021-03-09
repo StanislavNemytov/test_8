@@ -27,7 +27,10 @@ export default function reducerAuthorization(state = initialState, action) {
         setToken(token);
 
         return {
+          ...state,
           expired: true,
+          status: "",
+          message: "",
         };
       }
 
