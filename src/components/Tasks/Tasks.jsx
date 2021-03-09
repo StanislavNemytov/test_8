@@ -73,7 +73,7 @@ function Tasks({
 
   function createDataSource(tasks) {
     let tableData = [];
-    if (tasks.length) {
+    if (tasks && tasks.length) {
       tableData = tasks.map((task) => ({
         ...task,
         dataIndex: task.id,
