@@ -2,6 +2,8 @@
 
 Create tasks table with ReactJS.
 
+[**Link to deploy.**](https://stupefied-kilby-388530.netlify.app)
+
 ## Stack:
 - React
 - Redux
