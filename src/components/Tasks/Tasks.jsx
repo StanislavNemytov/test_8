@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-/* eslint-disable no-shadow */
 import { Table } from "antd";
 import { React, useEffect, useMemo } from "react";
 import { connect } from "react-redux";
@@ -12,15 +11,6 @@ import ChangerStatus from "../ChangerStatus/ChangerStatus";
 import TableTag from "../TableTag/TableTag";
 import TaskText from "../Task/TaskText";
 
-/**
- * @param {Object} state
- * @param {Function} state.getPage
- * @param {Object} state.reducerAPI
- * @param {boolean} state.reducerAPI.loading
- * @param {number} state.reducerAPI.currentPage
- * @param {number} state.reducerAPI.total_task_count
- * @param {[{id:number,username:string,text:string,email:string,status:number}]} state.reducerAPI.tasks
- */
 function Tasks({
   reducerAPI,
   getPage,
@@ -56,7 +46,7 @@ function Tasks({
       title: "Email",
       dataIndex: "email",
       key: "email",
-      width: "30%",
+      width: "max-content",
       sorter: () => {},
     },
     {
@@ -82,7 +72,7 @@ function Tasks({
 
   function createDataSource(tasks) {
     let tableData = [];
-    if (tasks && tasks.length) {
+    if (tasks.length) {
       tableData = tasks.map((task) => ({
         ...task,
         dataIndex: task.id,
@@ -94,23 +84,32 @@ function Tasks({
 
   const tableData = useMemo(() => createDataSource(tasks), [tasks]);
 
-  const handleTableChange = (pagination, filters, sorter) => {
-    const { current } = pagination;
-    startLoading();
+  const changeTablePage = (current) => {
     if (current && current !== params.page) {
       getPage({ ...params, page: current });
+      return true;
     }
+    return false;
+  };
 
+  const changeSortParams = (field, order) => {
     if (
-      sorter.field &&
-      (sorter.field !== params.sort_field ||
-        sortDirection[sorter.order] !== params.sort_direction)
+      field &&
+      (field !== params.sort_field ||
+        sortDirection[order] !== params.sort_direction)
     ) {
       const sort = {
-        sort_direction: sortDirection[sorter.order] || sortDirectionDefault,
-        sort_field: sorter.order ? sorter.field : "",
+        sort_direction: sortDirection[order] || sortDirectionDefault,
+        sort_field: order ? field : "",
       };
       getPage({ ...params, ...sort });
+    }
+  };
+
+  const onChange = ({ current, field, order }) => {
+    startLoading();
+    if (!changeTablePage(current)) {
+      changeSortParams(field, order);
     }
   };
 
@@ -118,7 +117,7 @@ function Tasks({
     body: { cell: TaskText },
   };
 
-  const handleSave = (updatedTask) => {
+  const saveUpdates = (updatedTask) => {
     startLoading();
     updateTask(updatedTask);
   };
@@ -146,7 +145,7 @@ function Tasks({
           editable: expired ? col.editable : false,
           dataIndex: col.dataIndex,
           title: col.title,
-          handleSave,
+          saveUpdates,
         }),
       };
     });
@@ -160,7 +159,9 @@ function Tasks({
     <Table
       loading={loading}
       columns={newColumns}
-      onChange={handleTableChange}
+      onChange={(pagination, filters, sorter) =>
+        onChange({ ...pagination, ...filters, ...sorter })
+      }
       dataSource={tableData}
       components={components}
       pagination={{
@@ -171,6 +172,7 @@ function Tasks({
       }}
       rowClassName={() => "editable-row"}
       bordered="true"
+      scroll={{ x: 950 }}
     />
   );
 }

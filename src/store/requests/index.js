@@ -1,13 +1,6 @@
 import { httpRequests } from "../../api/api";
+import creatFormData from "../../helpers/formData";
 import actions from "../actions/actions";
-
-function creatFormData(values) {
-  const form = new FormData();
-  Object.entries(values).forEach(([key, value]) => {
-    form.append(key, value);
-  });
-  return form;
-}
 
 export const getPage = (params) => async (dispatch) => {
   const response = await httpRequests.getPage(params);

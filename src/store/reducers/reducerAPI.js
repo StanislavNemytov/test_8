@@ -24,17 +24,6 @@ const initialState = {
   sortDirectionDefault: "desc",
 };
 
-/**
- * @param {initialState} state
- * @param {Object} action
- * @param {string} action.type
- * @param {Object} action.response
- * @param {Object} action.response.data
- * @param {number} action.response.data.total_task_count
- * @param {Object} action.response.data.message
- * @param {Object[]} action.response.data.message.tasks
- * @returns {initialState}
- */
 export default function reducerAPI(state = initialState, action) {
   switch (action.type) {
     case GET_PAGE: {

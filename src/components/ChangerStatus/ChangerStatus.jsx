@@ -1,4 +1,3 @@
-/* eslint-disable no-shadow */
 import { Button } from "antd";
 import React, { useMemo } from "react";
 import { connect } from "react-redux";

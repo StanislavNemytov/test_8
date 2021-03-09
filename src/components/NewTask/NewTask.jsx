@@ -1,6 +1,4 @@
-/* eslint-disable camelcase */
 /* eslint-disable no-console */
-/* eslint-disable no-shadow */
 import { Button, Col, Form, Input, notification, Row } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import TextArea from "antd/lib/input/TextArea";
@@ -26,15 +24,6 @@ const tailLayout = {
   },
 };
 
-/**
- * @param {Object} state
- * @param {Function} state.getPage
- * @param {Object} state.reducerAPI
- * @param {boolean} state.reducerAPI.loading
- * @param {number} state.reducerAPI.currentPage
- * @param {number} state.reducerAPI.total_task_count
- * @param {{id:number,username:string,text:string,email:string,status:number}} state.reducerAPI.tasks
- */
 function NewTask({ sendNewTask, startLoading, getPage, reducerAPI }) {
   const { params } = reducerAPI;
   const [form] = useForm();
@@ -63,7 +52,7 @@ function NewTask({ sendNewTask, startLoading, getPage, reducerAPI }) {
     <>
       <Row>
         <Col
-          lg={{
+          sm={{
             offset: 4,
           }}
         >
@@ -131,13 +120,6 @@ function NewTask({ sendNewTask, startLoading, getPage, reducerAPI }) {
   );
 }
 
-/**
- * @param {Object} state
- * @param {Object} state.reducerAPI
- * @param {number} state.reducerAPI.currentPage
- * @param {number} state.reducerAPI.total_task_count
- * @param {{id:number,username:string,text:string,email:string,status:number}} state.reducerAPI.tasks
- */
 const mapStateToProps = (state) => selectorReducerApi(state);
 
 const mapDispatchToProps = {

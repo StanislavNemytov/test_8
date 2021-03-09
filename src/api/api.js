@@ -17,9 +17,6 @@ export const httpRequests = {
         throw new Error(error.message);
       }),
 
-  /**
-   * @param {{email:string,username:string,text:string}} values
-   */
   sendNewTask: (form) =>
     instance
       .post("/create", form)

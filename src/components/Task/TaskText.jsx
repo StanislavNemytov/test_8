@@ -1,6 +1,4 @@
-/* eslint-disable no-alert */
 /* eslint-disable no-console */
-/* eslint-disable no-shadow */
 import { Button, Form } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import React, { useEffect, useRef } from "react";
@@ -20,7 +18,7 @@ const TaskText = ({
   children,
   dataIndex,
   record,
-  handleSave,
+  saveUpdates,
   reducerText,
   setCurrentEditingTask,
   endEditing,
@@ -63,11 +61,11 @@ const TaskText = ({
       endEditing();
       if (values.text.trim() !== text) {
         const { status } = record;
-        let newStatus = Number(status);
+        let newStatus = +status;
         if (status < 10) {
           newStatus += 10;
         }
-        handleSave({ ...record, ...values, status: newStatus });
+        saveUpdates({ ...record, ...values, status: newStatus });
       }
     } catch (errInfo) {
       console.log("Save failed:", errInfo);
@@ -96,7 +94,7 @@ const TaskText = ({
               },
             ]}
           >
-            <TextArea ref={inputRef} autoSize={{ minRows: 2, maxRows: 4 }} />
+            <TextArea ref={inputRef} autoSize={{ minRows: 1, maxRows: 4 }} />
           </Form.Item>
           <Form.Item
             style={{
@@ -106,7 +104,6 @@ const TaskText = ({
             <Button
               size="small"
               type="ghost"
-              color="green"
               style={{ marginRight: 8 }}
               onClick={cancelEditing}
             >
@@ -136,13 +133,6 @@ const TaskText = ({
   return <td {...restProps}>{childNode}</td>;
 };
 
-/**
- * @param {Object} state
- * @param {Object} state.reducerAPI
- * @param {number} state.reducerAPI.currentPage
- * @param {number} state.reducerAPI.total_task_count
- * @param {{id:number,username:string,text:string,email:string,status:number}} state.reducerAPI.tasks
- */
 const mapStateToProps = (state) => selectorReducerText(state);
 
 const mapDispatchToProps = {
