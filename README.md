@@ -8,7 +8,6 @@ Create tasks table with ReactJS.
 - React
 - Redux
 - Redux-Thunk
-- React router DOM
 - Less
 - Antd
 - Axios
